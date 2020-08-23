@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         btnSgUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+
             }
         });
         btnSgnIn.setOnClickListener(new View.OnClickListener() {
