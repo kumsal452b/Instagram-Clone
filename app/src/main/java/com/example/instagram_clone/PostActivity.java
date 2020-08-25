@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.parse.ParseFile;
+
 import java.io.IOException;
 
 public class PostActivity extends AppCompatActivity {
@@ -46,6 +48,8 @@ public class PostActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                byte[]data=imageView.get
+                ParseFile file=new ParseFile(,)
 
             }
         });
