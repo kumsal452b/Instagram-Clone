@@ -17,14 +17,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class PostActivity extends AppCompatActivity {
     EditText editText;
     ImageView imageView;
+    Bitmap selectedimae;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,9 +56,26 @@ public class PostActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                byte[]data=imageView.get
-                ParseFile file=new ParseFile(,)
-
+                ByteArrayOutputStream bos=new ByteArrayOutputStream();
+                selectedimae.compress(Bitmap.CompressFormat.PNG,50,bos);
+                byte[]data=bos.toByteArray();
+                ParseFile file=new ParseFile("resim.png",data);
+                ParseObject object=new ParseObject("posts");
+                object.put("comment",editText.getText().toString());
+                object.put("username", ParseUser.getCurrentUser().getUsername());
+                object.put("photo",file);
+                object.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e!=null){
+                            Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(getApplicationContext(),"Saved success",Toast.LENGTH_LONG).show();
+                            Intent intent=new Intent(getApplicationContext(),FeedActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                });
             }
         });
     }
@@ -60,6 +85,7 @@ public class PostActivity extends AppCompatActivity {
         if (grantResults.length>0){
             if (requestCode==2){
                 if (grantResults[0]==PackageManager.PERMISSION_GRANTED){
+
                     Intent intent=new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent,1);
                 }
@@ -76,6 +102,7 @@ public class PostActivity extends AppCompatActivity {
                     Uri uri=data.getData();
                     try {
                         Bitmap bitmap=MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
+                        selectedimae=bitmap;
                         imageView.setImageBitmap(bitmap);
                     } catch (IOException e) {
                         e.printStackTrace();
