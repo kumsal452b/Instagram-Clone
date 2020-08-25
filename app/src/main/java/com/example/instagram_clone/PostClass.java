@@ -17,16 +17,16 @@ import java.util.ArrayList;
 
 public class PostClass extends ArrayAdapter<String>{
     private final ArrayList<String> username;
-    private final  ArrayList<String> comand;
+    private final  ArrayList<String> command;
     private final  ArrayList<Bitmap>  userImage;
     private final Activity context;
 
-    public PostClass(Activity context, int resource, ArrayList<String> username, ArrayList<String> comand, ArrayList<Bitmap> userImage, Activity context1) {
+    public PostClass(Activity context, ArrayList<String> username, ArrayList<String> comand, ArrayList<Bitmap> userImage) {
         super(context,R.layout.custom_view,username);
         this.username = username;
-        this.comand = comand;
+        this.command = comand;
         this.userImage = userImage;
-        this.context = context1;
+        this.context = context;
     }
 
     @NonNull
@@ -38,7 +38,7 @@ public class PostClass extends ArrayAdapter<String>{
         TextView textcustom=view.findViewById(R.id.custom_view_commit_);
         ImageView imageView=view.findViewById(R.id.custom_view_image);
         textView.setText(username.get(position));
-        textcustom.setText(comand.get(position));
+        textcustom.setText(command.get(position));
         imageView.setImageBitmap(userImage.get(position));
         return view;
     }

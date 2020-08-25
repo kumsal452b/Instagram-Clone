@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.GetDataCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -33,6 +34,10 @@ import java.util.zip.Inflater;
 public class FeedActivity extends AppCompatActivity {
 
     ListView listView;
+    ArrayList<String> useerFrmpars;
+    ArrayList<String> commitFrmprs;
+    ArrayList<Bitmap> imageFrmprs;
+    PostClass postClass;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater=new MenuInflater(getApplicationContext());
@@ -63,20 +68,7 @@ public class FeedActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    private static byte[] readFileToByteArray(File file){
-        FileInputStream fis = null;
-        // Creating a byte array using the length of the file
-        // file.length returns long which is cast to int
-        byte[] bArray = new byte[(int) file.length()];
-        try{
-            fis = new FileInputStream(file);
-            fis.read(bArray);
-            fis.close();
-        }catch(IOException ioExp){
-            ioExp.printStackTrace();
-        }
-        return bArray;
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +76,15 @@ public class FeedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_feed);
         listView=findViewById(R.id.listview);
         final ArrayList<Bitmap> bitmapArrayList=new ArrayList<>();
+        useerFrmpars=new ArrayList<>();
+        commitFrmprs=new ArrayList<>();
+        imageFrmprs=new ArrayList<>();
+        postClass=new PostClass(this,useerFrmpars,commitFrmprs,imageFrmprs);
+        listView.setAdapter(postClass);
+        downloadData();
+
+    }
+    public void downloadData(){
         ParseQuery<ParseObject> parseQuery=new ParseQuery<ParseObject>("posts");
 //        parseQuery.whereContains("username",ParseUser.getCurrentUser().getUsername());
         parseQuery.findInBackground(new FindCallback<ParseObject>() {
@@ -92,23 +93,26 @@ public class FeedActivity extends AppCompatActivity {
                 if (e!=null){
                     Toast.makeText(getApplicationContext(),e.getLocalizedMessage(),Toast.LENGTH_LONG).show();
                 }else{
-                    for (ParseObject object:objects) {
-                        ParseFile file=object.getParseFile("photo");
-                        try {
-                            File dosya =file.getFile();
-                            byte[] bytes=readFileToByteArray(dosya);
-                            Bitmap bitmap= BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                            bitmapArrayList.add(bitmap);
-                        } catch (ParseException ex) {
-                            ex.printStackTrace();
-                        }
+                    for (final ParseObject object:objects) {
+                        ParseFile file = (ParseFile) object.get("photo");
+                        file.getDataInBackground(new GetDataCallback() {
+                            @Override
+                            public void done(byte[] data, ParseException e) {
+                                if (data!=null && e==null){
+                                    Bitmap bitmap=BitmapFactory.decodeByteArray(data,0,data.length);
+                                    imageFrmprs.add(bitmap);
+                                    useerFrmpars.add(object.getString("username"));
+                                    commitFrmprs.add(object.getString("comment"));
+                                    postClass.notifyDataSetChanged();
+                                }else{
+                                    Toast.makeText(getApplicationContext(),"Dowload error",Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
                     }
                 }
 
             }
         });
-        ArrayAdapter<Bitmap>arrayAdapter =new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,bitmapArrayList);
-        listView.setAdapter(arrayAdapter);
-
     }
 }
