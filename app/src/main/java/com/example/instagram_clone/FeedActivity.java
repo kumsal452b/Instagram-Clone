@@ -43,7 +43,8 @@ public class FeedActivity extends AppCompatActivity {
         }
         if (item.getItemId()==R.id.addpost){
             //intent
-            //
+           Intent intent=new Intent(getApplicationContext(),PostActivity.class);
+           startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }
