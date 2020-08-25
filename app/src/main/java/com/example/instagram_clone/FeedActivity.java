@@ -85,7 +85,7 @@ public class FeedActivity extends AppCompatActivity {
         listView=findViewById(R.id.listview);
         final ArrayList<Bitmap> bitmapArrayList=new ArrayList<>();
         ParseQuery<ParseObject> parseQuery=new ParseQuery<ParseObject>("posts");
-        parseQuery.whereContains("username",ParseUser.getCurrentUser().getUsername());
+//        parseQuery.whereContains("username",ParseUser.getCurrentUser().getUsername());
         parseQuery.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -107,7 +107,7 @@ public class FeedActivity extends AppCompatActivity {
 
             }
         });
-        ArrayAdapter<Bitmap>arrayAdapter =new ArrayAdapter<>(this,android.R.layout.select_dialog_item,bitmapArrayList);
+        ArrayAdapter<Bitmap>arrayAdapter =new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,bitmapArrayList);
         listView.setAdapter(arrayAdapter);
 
     }
