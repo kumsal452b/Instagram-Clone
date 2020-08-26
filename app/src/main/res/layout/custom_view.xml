@@ -11,13 +11,27 @@
         android:id="@+id/custom_virev_usernametext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:autoText="false"
+        android:background="@drawable/gradient"
+        android:contextClickable="false"
         android:text="Username"
-        android:textSize="30sp" />
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textColorHighlight="#C62A2A"
+        android:textDirection="firstStrongRtl"
+        android:textIsSelectable="true"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:pointerIcon="cell"
+        />
 
     <ImageView
         android:id="@+id/custom_view_image"
         android:layout_width="match_parent"
         android:layout_height="221dp"
+        android:scaleType="fitXY"
         app:srcCompat="@drawable/ic_launcher_background" />
 
     <TextView
@@ -25,5 +39,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Command"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
 </LinearLayout>
